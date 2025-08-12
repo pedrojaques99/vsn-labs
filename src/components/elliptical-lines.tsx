@@ -106,8 +106,10 @@ export function EllipticalLines() {
     const dy = line.originalCenterY - mousePos.y
     const distance = Math.sqrt(dx * dx + dy * dy)
     
-    const repulsionStrength = Math.max(0, 150 - distance) / 150
-    const repulsionRadius = 150
+    const canvas = canvasRef.current
+    const maxDistance = canvas ? Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) : 1000
+    const repulsionStrength = Math.max(0, maxDistance - distance) / maxDistance
+    const repulsionRadius = maxDistance
     
     let newCenterX = line.originalCenterX
     let newCenterY = line.originalCenterY
@@ -120,7 +122,7 @@ export function EllipticalLines() {
       const normalizedDx = dx / length
       const normalizedDy = dy / length
       
-      const repulsionDistance = repulsionStrength * 40
+      const repulsionDistance = repulsionStrength * 80
       
       const randomOffsetX = Math.sin(Date.now() * 0.0005 + line.originalCenterX * 0.005) * 2
       const randomOffsetY = Math.cos(Date.now() * 0.0005 + line.originalCenterY * 0.005) * 2

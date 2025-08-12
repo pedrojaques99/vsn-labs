@@ -105,8 +105,10 @@ export function WaveAscii() {
     const dy = point.originalY - mousePos.y
     const distance = Math.sqrt(dx * dx + dy * dy)
     
-    const repulsionStrength = Math.max(0, 150 - distance) / 150
-    const repulsionRadius = 150
+    const canvas = canvasRef.current
+    const maxDistance = canvas ? Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) : 1000
+    const repulsionStrength = Math.max(0, maxDistance - distance) / maxDistance
+    const repulsionRadius = maxDistance
     
     let newX = point.originalX
     let newY = point.originalY
@@ -117,7 +119,7 @@ export function WaveAscii() {
       const normalizedDx = dx / length
       const normalizedDy = dy / length
       
-      const repulsionDistance = repulsionStrength * 40
+      const repulsionDistance = repulsionStrength * 80
       
       const randomOffsetX = Math.sin(Date.now() * 0.0005 + point.originalX * 0.005) * 2
       const randomOffsetY = Math.cos(Date.now() * 0.0005 + point.originalY * 0.005) * 2
@@ -125,8 +127,8 @@ export function WaveAscii() {
       newX = point.originalX + normalizedDx * repulsionDistance + randomOffsetX
       newY = point.originalY + normalizedDy * repulsionDistance + randomOffsetY
       
-      if (repulsionStrength > 0.5 && Math.random() > 0.7) {
-        const timeBasedIndex = Math.floor(Date.now() * 0.005 + distance * 0.05) % ASCII_CHARS.length
+      if (repulsionStrength > 0.3 && Math.random() > 0.95) {
+        const timeBasedIndex = Math.floor(Date.now() * 0.001 + distance * 0.01) % ASCII_CHARS.length
         newChar = ASCII_CHARS[timeBasedIndex]
       }
     } else {
