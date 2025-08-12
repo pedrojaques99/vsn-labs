@@ -35,7 +35,7 @@ export default function RootLayout({
               href="/"
               className="text-white font-mono font-semibold hover:text-gray-300 transition-colors"
             >
-              ← Voltar ao Início
+              ← Back
             </Link>
           </div>
         </nav>

@@ -2,72 +2,64 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react'
 
-interface EllipticalLine {
-  centerX: number
-  centerY: number
-  originalCenterX: number
-  originalCenterY: number
-  radiusX: number
-  radiusY: number
-  originalRadiusX: number
-  originalRadiusY: number
-  rotation: number
-  originalRotation: number
+interface StarburstLine {
+  x: number
+  y: number
+  endX: number
+  endY: number
+  length: number
+  angle: number
+  originalLength: number
   opacity: number
-  thickness: number
 }
 
 export function EllipticalLines() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const animationRef = useRef<number | undefined>(undefined)
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
-  const [ellipticalLines, setEllipticalLines] = useState<EllipticalLine[]>([])
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [starburstLines, setStarburstLines] = useState<StarburstLine[]>([])
 
-  // Inicializar linhas elípticas
+  // Initialize starburst lines
   useEffect(() => {
     const canvas = canvasRef.current
-    if (!canvas || isInitialized) return
+    if (!canvas) return
 
-    const generateEllipticalLines = () => {
-      const lines: EllipticalLine[] = []
+    const generateStarburst = () => {
+      const lineCount = 60
       const centerX = canvas.width / 2
       const centerY = canvas.height / 2
+      const voidRadius = 30
+      const maxLength = 200
       
-      // Criar múltiplas elipses concêntricas
-      for (let i = 0; i < 15; i++) {
-        const baseRadius = 30 + (i * 25)
-        const distortion = 0.3 + (i * 0.05)
-        const rotation = (i * 5) * (Math.PI / 180)
+      const newLines: StarburstLine[] = []
+      
+      for (let i = 0; i < lineCount; i++) {
+        const angle = (i / lineCount) * Math.PI * 2 + Math.random() * 0.2
+        const length = voidRadius + Math.random() * maxLength
+        const endX = centerX + Math.cos(angle) * length
+        const endY = centerY + Math.sin(angle) * length
         
-        lines.push({
-          centerX,
-          centerY,
-          originalCenterX: centerX,
-          originalCenterY: centerY,
-          radiusX: baseRadius,
-          radiusY: baseRadius * (1 + distortion),
-          originalRadiusX: baseRadius,
-          originalRadiusY: baseRadius * (1 + distortion),
-          rotation,
-          originalRotation: rotation,
-          opacity: 0.8 - (i * 0.03),
-          thickness: Math.max(1, 3 - (i * 0.1))
+        newLines.push({
+          x: centerX + Math.cos(angle) * voidRadius,
+          y: centerY + Math.sin(angle) * voidRadius,
+          endX,
+          endY,
+          length,
+          angle,
+          originalLength: length,
+          opacity: Math.random() * 0.4 + 1
         })
       }
       
-      setEllipticalLines(lines)
-      setIsInitialized(true)
+      setStarburstLines(newLines)
     }
 
-    // Definir tamanho do canvas
     canvas.width = window.innerWidth
     canvas.height = window.innerHeight
+    generateStarburst()
+  }, [])
 
-    generateEllipticalLines()
-  }, [isInitialized])
-
-  // Gerenciar movimento do mouse
+  // Handle mouse movement
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({
@@ -93,70 +85,47 @@ export function EllipticalLines() {
     }
   }, [])
 
-  // Função para desenhar elipse no Canvas
-  const drawEllipse = (ctx: CanvasRenderingContext2D, centerX: number, centerY: number, radiusX: number, radiusY: number, rotation: number) => {
-    ctx.beginPath()
-    ctx.ellipse(centerX, centerY, radiusX, radiusY, rotation, 0, 2 * Math.PI)
-    ctx.stroke()
-  }
-
-  // Função para calcular propriedades das linhas com efeitos
-  const calculateLineStyle = useCallback((line: EllipticalLine) => {
-    const dx = line.originalCenterX - mousePos.x
-    const dy = line.originalCenterY - mousePos.y
-    const distance = Math.sqrt(dx * dx + dy * dy)
-    
-    const canvas = canvasRef.current
-    const maxDistance = canvas ? Math.sqrt(canvas.width * canvas.width + canvas.height * canvas.height) : 1000
-    const repulsionStrength = Math.max(0, maxDistance - distance) / maxDistance
-    const repulsionRadius = maxDistance
-    
-    let newCenterX = line.originalCenterX
-    let newCenterY = line.originalCenterY
-    let newRadiusX = line.originalRadiusX
-    let newRadiusY = line.originalRadiusY
-    let newRotation = line.originalRotation
-    
-    if (distance < repulsionRadius) {
-      const length = Math.sqrt(dx * dx + dy * dy) || 1
-      const normalizedDx = dx / length
-      const normalizedDy = dy / length
-      
-      const repulsionDistance = repulsionStrength * 80
-      
-      const randomOffsetX = Math.sin(Date.now() * 0.0005 + line.originalCenterX * 0.005) * 2
-      const randomOffsetY = Math.cos(Date.now() * 0.0005 + line.originalCenterY * 0.005) * 2
-      
-      newCenterX = line.originalCenterX + normalizedDx * repulsionDistance + randomOffsetX
-      newCenterY = line.originalCenterY + normalizedDy * repulsionDistance + randomOffsetY
-      
-      const distortion = repulsionStrength * 0.5
-      newRadiusX = line.originalRadiusX * (1 + distortion)
-      newRadiusY = line.originalRadiusY * (1 + distortion)
-      newRotation = line.originalRotation + repulsionStrength * 0.1
-    } else {
-      const subtleMovementX = Math.sin(Date.now() * 0.001 + line.originalCenterX * 0.01) * 1
-      const subtleMovementY = Math.cos(Date.now() * 0.001 + line.originalCenterY * 0.01) * 1
-      newCenterX = line.originalCenterX + subtleMovementX
-      newCenterY = line.originalCenterY + subtleMovementY
-    }
-    
-    const wave = Math.sin(distance * 0.01 + Date.now() * 0.001)
-    const opacity = Math.max(0.4, 0.8 + wave * 0.15)
-    const thickness = line.thickness + wave * 0.5 + Math.sin(Date.now() * 0.0005 + line.originalCenterX * 0.005) * 0.5
-    
-    return {
-      centerX: newCenterX,
-      centerY: newCenterY,
-      radiusX: newRadiusX,
-      radiusY: newRadiusY,
-      rotation: newRotation,
-      opacity,
-      thickness: Math.max(0.5, thickness)
-    }
+  // Update starburst lines with mouse following animation
+  const updateStarburst = useCallback(() => {
+    setStarburstLines(prevLines => 
+      prevLines.map(line => {
+        const centerX = window.innerWidth / 2
+        const centerY = window.innerHeight / 2
+        
+        // Calculate distance from mouse to center
+        const dx = mousePos.x - centerX
+        const dy = mousePos.y - centerY
+        const mouseDistance = Math.sqrt(dx * dx + dy * dy)
+        
+        // Calculate angle from center to mouse
+        const mouseAngle = Math.atan2(dy, dx)
+        
+        // Calculate angle difference between line and mouse
+        const angleDiff = Math.abs(line.angle - mouseAngle)
+        const normalizedAngleDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff) / Math.PI
+        
+        // Lines closer to mouse direction get longer, others get shorter
+        const directionInfluence = 1 - normalizedAngleDiff * 0.1
+        
+        // Distance influence: closer mouse = longer lines, farther mouse = shorter lines
+        const maxDistance = Math.sqrt(centerX * centerX + centerY * centerY)
+        const distanceInfluence = Math.max(0.3, 1 - (mouseDistance / maxDistance) * 0.7)
+        
+        // Combine influences with breathing animation
+        const breathing = Math.sin(Date.now() * 0.002 + line.angle * 15) * 0.05
+        const newLength = line.originalLength * (1 + breathing) * directionInfluence * distanceInfluence
+        
+        return {
+          ...line,
+          endX: line.x + Math.cos(line.angle) * newLength,
+          endY: line.y + Math.sin(line.angle) * newLength,
+          length: newLength
+        }
+      })
+    )
   }, [mousePos])
 
-  // Função de renderização
+  // Render function
   const render = useCallback(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -164,41 +133,106 @@ export function EllipticalLines() {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    // Limpar canvas
+    // Clear canvas
     ctx.fillStyle = '#000000'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Configurar estilos das linhas
-    ctx.strokeStyle = '#ffffff'
-    ctx.lineCap = 'round'
+    // Update starburst
+    updateStarburst()
 
-    // Renderizar elipses
-    ellipticalLines.forEach(line => {
-      const calculated = calculateLineStyle(line)
-      
+    // Draw central void with subtle glow
+    const centerX = canvas.width / 2
+    const centerY = canvas.height / 2
+    ctx.save()
+    
+    // Draw outer glow ring
+    ctx.globalAlpha = 0.05
+    ctx.fillStyle = '#ffffff'
+    ctx.shadowColor = '#52ddeb'
+    ctx.shadowBlur = 150
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, 70, 0, Math.PI * 2)
+    ctx.fill()
+    
+    // Draw core void
+    ctx.globalAlpha = 1
+    ctx.shadowBlur = 0
+    ctx.fillStyle = '#000000'
+    ctx.beginPath()
+    ctx.arc(centerX, centerY, 60, 0, Math.PI * 2)
+    ctx.fill()
+    
+    ctx.restore()
+
+    // Draw starburst lines with glow effect
+    starburstLines.forEach(line => {
       ctx.save()
-      ctx.globalAlpha = calculated.opacity
-      ctx.lineWidth = calculated.thickness
       
-      drawEllipse(ctx, calculated.centerX, calculated.centerY, calculated.radiusX, calculated.radiusY, calculated.rotation)
+      // Draw outer glow (larger, more transparent)
+      ctx.globalAlpha = line.opacity * 0.1
+      ctx.strokeStyle = '#ffffff'
+      ctx.lineWidth = 1
+      ctx.lineCap = 'round'
+      ctx.shadowColor = '#ffffff'
+      ctx.shadowBlur = 50
+      
+      ctx.beginPath()
+      ctx.moveTo(line.x, line.y)
+      ctx.lineTo(line.endX, line.endY)
+      ctx.stroke()
+      
+      // Draw middle glow
+      ctx.globalAlpha = line.opacity * 0.6
+      ctx.lineWidth = 3
+      ctx.shadowBlur = 8
+      
+      ctx.beginPath()
+      ctx.moveTo(line.x, line.y)
+      ctx.lineTo(line.endX, line.endY)
+      ctx.stroke()
+      
+      // Draw core line
+      ctx.globalAlpha = line.opacity
+      ctx.lineWidth = 1
+      ctx.shadowBlur = 0
+      
+      ctx.beginPath()
+      ctx.moveTo(line.x, line.y)
+      ctx.lineTo(line.endX, line.endY)
+      ctx.stroke()
+      
+      // Draw glowing dot at end
+      ctx.globalAlpha = line.opacity * 0.4
+      ctx.fillStyle = '#ffffff'
+      ctx.shadowBlur = 10
+      ctx.beginPath()
+      ctx.arc(line.endX, line.endY, 4, 0, Math.PI * 2)
+      ctx.fill()
+      
+      // Draw core dot
+      ctx.globalAlpha = line.opacity
+      ctx.shadowBlur = 0
+      ctx.beginPath()
+      ctx.arc(line.endX, line.endY, 2, 0, Math.PI * 2)
+      ctx.fill()
+      
       ctx.restore()
     })
 
-    // Renderizar cursor
+    // Draw cursor
     ctx.save()
     ctx.fillStyle = '#ffffff'
     ctx.beginPath()
-    ctx.arc(mousePos.x, mousePos.y, 4, 0, Math.PI * 2)
+    ctx.arc(mousePos.x, mousePos.y, 3, 0, Math.PI * 2)
     ctx.fill()
     ctx.restore()
 
-    // Continuar animação
     animationRef.current = requestAnimationFrame(render)
-  }, [ellipticalLines, calculateLineStyle, mousePos])
+  }, [starburstLines, updateStarburst, mousePos])
 
-  // Iniciar animação
+  // Start animation
   useEffect(() => {
-    if (ellipticalLines.length > 0) {
+    if (starburstLines.length > 0) {
       animationRef.current = requestAnimationFrame(render)
     }
 
@@ -207,7 +241,7 @@ export function EllipticalLines() {
         cancelAnimationFrame(animationRef.current)
       }
     }
-  }, [ellipticalLines, render])
+  }, [starburstLines, render])
 
   return (
     <div className="relative w-full h-screen bg-black overflow-hidden">
