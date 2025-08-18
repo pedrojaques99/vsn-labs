@@ -80,7 +80,6 @@ export default function FrequencyWave({
       
       for (let j = 1; j < points.length; j++) {
         const point = points[j];
-        const prevPoint = points[j - 2];
         
         // Add some randomness for bitmap effect
         const randomOffset = Math.sin(j * 0.1) * 0.5;
@@ -101,7 +100,6 @@ export default function FrequencyWave({
       
       for (let j = 1; j < points.length; j++) {
         const point = points[j];
-        const prevPoint = points[j - 1];
         const randomOffset = Math.sin(j * 0.1) * 1;
         
         ctx.lineTo(

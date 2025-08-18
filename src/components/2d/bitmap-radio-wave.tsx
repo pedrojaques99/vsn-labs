@@ -126,12 +126,7 @@ export function BitmapRadioWave() {
     // Tamanho dinâmico baseado na proximidade do mouse e intensidade da onda
     const baseSize = 1 + intensity * 3
     const mouseSizeInfluence = 1 + mouseInfluence * 2 // Pontos ficam maiores próximos ao mouse
-    const waveSize = 1 + Math.sin(distance * 0.05 - time * 2) * mouseInfluence * 0.5
     const finalSize = baseSize * mouseSizeInfluence
-    
-    // Criar padrões de bitmap com espaçamento dinâmico
-    const bitmapFrequency = 0.01 - mouseInfluence * 0.005 // Frequência do bitmap muda com mouse
-    const bitmapPattern = Math.sin(point.originalX * bitmapFrequency) * Math.sin(point.originalY * bitmapFrequency)
     const visible = intensity > 0.01
     
     return {

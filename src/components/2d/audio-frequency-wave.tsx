@@ -46,9 +46,62 @@ export default function AudioFrequencyWave() {
     }
   }, [])
 
-  const setupAudio = async (file: File) => {
+  // Efeito para manter renderização contínua em tempo real
+  useEffect(() => {
+    const animate = () => {
+      if (!canvasRef.current) return
+      
+      let dataArray: Uint8Array
+      
+      if (analyserRef.current && isPlaying) {
+        // Usar dados reais do áudio quando tocando
+        const bufferLength = analyserRef.current.frequencyBinCount
+        dataArray = new Uint8Array(bufferLength)
+        analyserRef.current.getByteFrequencyData(dataArray)
+      } else {
+        // Usar dados simulados quando não há áudio
+        dataArray = generateSimulatedData()
+      }
+      
+      drawWaveform(dataArray)
+      animationRef.current = requestAnimationFrame(animate)
+    }
+    
+    animate()
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current)
+      }
+    }
+  }, [amplitude, waveSpeed, particleDensity, lineWidth, isPlaying]) // Reagir a mudanças nos controles
+
+  // Função para gerar dados simulados para preview
+  const generateSimulatedData = (): Uint8Array => {
+    const data = new Uint8Array(256)
+    const time = Date.now() * 0.002
+    
+    for (let i = 0; i < data.length; i++) {
+      // Simular diferentes faixas de frequência
+      const bassFreq = i < 32 ? Math.sin(time * 1.5 + i * 0.3) * 80 + 40 : 0
+      const midFreq = i >= 32 && i < 128 ? Math.sin(time * 2.5 + i * 0.1) * 60 + 30 : 0
+      const highFreq = i >= 128 ? Math.sin(time * 4 + i * 0.05) * 40 + 20 : 0
+      
+      // Adicionar variação aleatória sutil
+      const noise = (Math.random() - 0.5) * 15
+      
+      // Combinar frequências com atenuação por faixa
+      const combined = (bassFreq + midFreq + highFreq + noise) * (0.4 + Math.sin(time) * 0.3)
+      
+      data[i] = Math.max(0, Math.min(255, combined))
+    }
+    
+    return data
+  }
+
+  const setupAudio = async () => {
     try {
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)()
+      const audioContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)()
       const analyser = audioContext.createAnalyser()
       const source = audioContext.createMediaElementSource(audioRef.current!)
       
@@ -58,26 +111,11 @@ export default function AudioFrequencyWave() {
       analyser.minDecibels = -90
       analyser.maxDecibels = -10
       
-      const bufferLength = analyser.frequencyBinCount
-      
       source.connect(analyser)
       analyser.connect(audioContext.destination)
       
       audioContextRef.current = audioContext
       analyserRef.current = analyser
-      
-      // Configurar dados de frequência
-      const dataArray = new Uint8Array(bufferLength)
-      
-      const animate = () => {
-        if (!analyser || !canvasRef.current) return
-        
-        analyser.getByteFrequencyData(dataArray)
-        drawWaveform(dataArray)
-        animationRef.current = requestAnimationFrame(animate)
-      }
-      
-      animate()
       
     } catch (error) {
       console.error('Erro ao configurar áudio:', error)
@@ -190,7 +228,7 @@ export default function AudioFrequencyWave() {
       
       if (audioRef.current) {
         audioRef.current.src = URL.createObjectURL(file)
-        setupAudio(file).finally(() => setIsLoading(false))
+        setupAudio().finally(() => setIsLoading(false))
       }
     }
   }
@@ -289,7 +327,7 @@ export default function AudioFrequencyWave() {
       </div>
       
       {/* Controles de efeito minimalistas */}
-      <div className="absolute top-8 right-8 bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-white/20">
+      <div className="absolute top-16 right-8 bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-white/20">
         <div className="flex items-center gap-3">
           {/* Toggle controles */}
           <button
@@ -314,7 +352,7 @@ export default function AudioFrequencyWave() {
                 <input
                   type="range"
                   min="50"
-                  max="200"
+                  max="500"
                   step="10"
                   value={amplitude}
                   onChange={(e) => setAmplitude(Number(e.target.value))}
@@ -331,7 +369,7 @@ export default function AudioFrequencyWave() {
                 <input
                   type="range"
                   min="5"
-                  max="20"
+                  max="100"
                   step="1"
                   value={waveSpeed}
                   onChange={(e) => setWaveSpeed(Number(e.target.value))}
@@ -347,8 +385,8 @@ export default function AudioFrequencyWave() {
                 </svg>
                 <input
                   type="range"
-                  min="20"
-                  max="100"
+                  min="10"
+                  max="200"
                   step="10"
                   value={particleDensity}
                   onChange={(e) => setParticleDensity(Number(e.target.value))}

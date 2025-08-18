@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, useCallback } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
@@ -308,7 +308,7 @@ export function useThreeJS(config: ThreeJSConfig = {}): ThreeJSContext {
 // Hook para renderização em loop
 export function useRenderLoop(
   renderFunction: () => void,
-  dependencies: any[] = [],
+  dependencies: React.DependencyList = [],
   isActive: boolean = true
 ) {
   const animationRef = useRef<number | undefined>(undefined)
@@ -336,7 +336,7 @@ export function useRenderLoop(
 // Hook para recursos Three.js
 export function useThreeResource<T extends THREE.Object3D | THREE.Material | THREE.BufferGeometry>(
   createResource: () => T,
-  dependencies: any[] = []
+  dependencies: React.DependencyList = []
 ) {
   const resourceRef = useRef<T | null>(null)
 
@@ -347,7 +347,7 @@ export function useThreeResource<T extends THREE.Object3D | THREE.Material | THR
       if (resourceRef.current) {
         try {
           if ('dispose' in resourceRef.current) {
-            (resourceRef.current as any).dispose()
+            (resourceRef.current as T & { dispose: () => void }).dispose()
           }
         } catch (error) {
           console.warn('Erro ao dispor recurso:', error)

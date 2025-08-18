@@ -1,5 +1,6 @@
 // Componentes 2D (Canvas)
 export { default as AudioFrequencyWave } from './audio-frequency-wave'
+export { default as EllipseAudioFreq } from './ellipse-audio-freq'
 export { WaveAsciiVortex } from './wave-ascii-vortex'
 export { default as FrequencyWave } from './frequency-wave'
 export { default as Particle3DGlobe } from './particle-3d-globe'

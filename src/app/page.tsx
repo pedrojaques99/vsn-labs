@@ -11,6 +11,7 @@ const effects = [
   { path: '/particle-3d-globe', label: 'GLOBE' },
   { path: '/frequency-wave', label: 'FREQ' },
   { path: '/audio-frequency-wave', label: 'AUDIO FREQ' },
+  { path: '/elipse-audio-freq', label: 'ELIPSE AUDIO' },
   { path: '/wave-polar-grid-alpha', label: 'POLAR GRID ALPHA' },
   { path: '/wave-polar-grid', label: 'POLAR GRID' }
 ]

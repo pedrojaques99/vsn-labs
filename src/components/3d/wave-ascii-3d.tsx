@@ -34,7 +34,7 @@ export function WaveAscii3D() {
   const [isLoading, setIsLoading] = useState(false)
   const [hasModel, setHasModel] = useState(false)
   const [showGrid, setShowGrid] = useState(true)
-  const [wireframeColor, setWireframeColor] = useState('#00ff00')
+
   const [showControls, setShowControls] = useState(true)
   const [objectRotation, setObjectRotation] = useState({ x: 0, y: 0, z: 0 })
   const [objectScale, setObjectScale] = useState({ x: 1, y: 1, z: 1 })
@@ -211,13 +211,7 @@ export function WaveAscii3D() {
     }
   }, [modelScale])
 
-  // Handle file input
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>, scene: THREE.Scene) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      loadModel(file, scene)
-    }
-  }, [loadModel])
+
 
   // Setup do componente
   const handleInitialized = useCallback((scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer) => {
@@ -305,7 +299,7 @@ export function WaveAscii3D() {
       
       {/* Controls */}
       {showControls && (
-        <div className="absolute top-4 left-4 z-20 bg-black/80 backdrop-blur-sm rounded-lg p-4 text-white max-w-sm">
+        <div className="absolute top-16 left-4 z-20 bg-black/80 backdrop-blur-sm rounded-lg p-4 text-white max-w-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">Controles 3D</h3>
             <button
@@ -468,7 +462,7 @@ export function WaveAscii3D() {
       {!showControls && (
         <button
           onClick={() => setShowControls(true)}
-          className="absolute top-4 left-4 z-20 bg-black/80 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-black/90"
+          className="absolute top-16 left-4 z-20 bg-black/80 backdrop-blur-sm rounded-lg p-2 text-white hover:bg-black/90"
         >
           ⚙️
         </button>
