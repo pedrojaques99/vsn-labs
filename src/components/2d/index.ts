@@ -1,0 +1,11 @@
+// Componentes 2D (Canvas)
+export { default as AudioFrequencyWave } from './audio-frequency-wave'
+export { WaveAsciiVortex } from './wave-ascii-vortex'
+export { default as FrequencyWave } from './frequency-wave'
+export { default as Particle3DGlobe } from './particle-3d-globe'
+export { ParticleGlitch } from './particle-glitch'
+export { default as Topographic } from './topographic'
+export { EllipticalLines } from './elliptical-lines'
+export { BitmapRadioWave } from './bitmap-radio-wave'
+export { WaveAscii } from './wave-ascii'
+export { WaveDemo } from './wave-demo'

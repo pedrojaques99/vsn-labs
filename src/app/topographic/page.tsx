@@ -1,4 +1,4 @@
-import Topographic from "@/components/topographic";
+import { Topographic } from "@/components/2d";
 
 export default function TopographicPage() {
   return (

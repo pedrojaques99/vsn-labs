@@ -1,4 +1,4 @@
-import { ParticleGlitch } from '@/components/particle-glitch'
+import { ParticleGlitch } from '@/components/2d'
 
 export default function ParticleGlitchPage() {
   return (

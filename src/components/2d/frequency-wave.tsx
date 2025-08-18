@@ -131,8 +131,6 @@ export default function FrequencyWave({
       ctx.setLineDash([]);
     }
 
-
-
     animationRef.current = requestAnimationFrame(drawFrequencyWave);
   }, [frequency, amplitude, distortion, lineCount, cursorRadius]);
 

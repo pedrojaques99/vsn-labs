@@ -195,7 +195,7 @@ export function ParticleGlitch({
       // Desenhar partícula
       ctx.save()
       ctx.globalAlpha = particle.alpha
-      ctx.fillStyle = '#464646FF'
+      ctx.fillStyle = '#A1A1A1FF'
       ctx.beginPath()
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2)
       ctx.fill()

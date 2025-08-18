@@ -1,4 +1,4 @@
-import { BitmapRadioWave } from '@/components/bitmap-radio-wave'
+import { BitmapRadioWave } from '@/components/2d'
 
 export default function BitmapRadioWavePage() {
   return <BitmapRadioWave />

@@ -1,14 +1,18 @@
 import Link from 'next/link'
-import { ParticleGlitch } from '@/components/particle-glitch'
+import { ParticleGlitch } from '@/components/2d'
 
 const effects = [
   { path: '/ascii-wave', label: 'ASCII' },
+  { path: '/ascii-vortex', label: 'IMAGE ASCII' },
+  { path: '/ascii-3d', label: '3D' },
   { path: '/elliptical-lines', label: 'ELIPSE' },
   { path: '/bitmap-radio-wave', label: 'HALFTONE' },
   { path: '/particle-glitch', label: 'GLITCH' },
-  { path: '/topographic', label: 'TOPO' },
   { path: '/particle-3d-globe', label: 'GLOBE' },
-  { path: '/frequency-wave', label: 'FREQ' }
+  { path: '/frequency-wave', label: 'FREQ' },
+  { path: '/audio-frequency-wave', label: 'AUDIO FREQ' },
+  { path: '/wave-polar-grid-alpha', label: 'POLAR GRID ALPHA' },
+  { path: '/wave-polar-grid', label: 'POLAR GRID' }
 ]
 
 export default function Home() {
@@ -29,15 +33,19 @@ export default function Home() {
             <div className="w-100 h-px bg-white mx-auto opacity-60" />
           </div>
           
-          <menu className="space-y-1 flex flex-col items-center justify-center w-full">
+          <menu className="grid grid-cols-3 gap-6 max-w-3xl mx-auto">
             {effects.map((effect, i) => (
               <Link 
                 key={effect.path}
                 href={effect.path}
-                className="block text-white/70 hover:text-white hover:border-white border-b-2 border-transparent transition-all duration-300 hover:scale-105 mb-5 flex items-center justify-between w-full max-w-md"
+                className="text-center text-white/60 hover:text-white transition-colors duration-200"
               >
-                <span>{String(i + 1).padStart(2, '0')} {effect.label}</span>
-                <span className="text-white/50">→</span>
+                <div className="text-xs text-white/30 mb-1">
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <div className="text-sm font-light">
+                  {effect.label}
+                </div>
               </Link>
             ))}
           </menu>  
