@@ -311,6 +311,65 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.removeItem('youtube-mixer-custom-theme')
   }, [])
 
+  // Salvar tema no Supabase
+  const saveThemeToSupabase = useCallback(async () => {
+    if (!supabase) return
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { error } = await supabase.rpc('update_user_theme', {
+        p_theme_id: currentTheme.id,
+        p_custom_background_color: currentTheme.id === 'custom' ? currentTheme.colors.background : null,
+        p_custom_accent_color: currentTheme.id === 'custom' ? currentTheme.colors.accent : null,
+        p_is_light_mode: isLightMode
+      })
+
+      if (error) {
+        console.error('Error saving theme to Supabase:', error)
+      }
+    } catch (error) {
+      console.error('Error saving theme to Supabase:', error)
+    }
+  }, [currentTheme, isLightMode])
+
+  // Carregar tema do Supabase
+  const loadThemeFromSupabase = useCallback(async () => {
+    if (!supabase) return
+    
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) return
+
+      const { data, error } = await supabase.rpc('get_user_theme')
+      if (error) {
+        console.error('Error loading theme from Supabase:', error)
+        return
+      }
+
+      if (data && data.length > 0) {
+        const themeData = data[0]
+        
+        if (themeData.theme_id === 'custom' && themeData.custom_background_color && themeData.custom_accent_color) {
+          // Carregar tema customizado
+          setCustomColors(themeData.custom_background_color, themeData.custom_accent_color)
+        } else {
+          // Carregar tema padrão
+          const theme = themes.find(t => t.id === themeData.theme_id) || defaultThemes[0]
+          setTheme(theme.id)
+        }
+        
+        // Aplicar modo light/dark
+        if (themeData.is_light_mode !== isLightMode) {
+          setIsLightMode(themeData.is_light_mode)
+        }
+      }
+    } catch (error) {
+      console.error('Error loading theme from Supabase:', error)
+    }
+  }, [themes, isLightMode, setTheme, setCustomColors])
+
 
   const value: ThemeContextType = {
     currentTheme,
