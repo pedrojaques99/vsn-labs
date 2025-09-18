@@ -57,7 +57,7 @@ export default function AudioFrequencyWave() {
         // Usar dados reais do áudio quando tocando
         const bufferLength = analyserRef.current.frequencyBinCount
         dataArray = new Uint8Array(bufferLength)
-        analyserRef.current.getByteFrequencyData(dataArray)
+        ;(analyserRef.current.getByteFrequencyData as (data: Uint8Array) => void)(dataArray)
       } else {
         // Usar dados simulados quando não há áudio
         dataArray = generateSimulatedData()
@@ -326,94 +326,100 @@ export default function AudioFrequencyWave() {
         </div>
       </div>
       
-      {/* Controles de efeito minimalistas */}
-      <div className="absolute top-16 right-8 bg-black/80 backdrop-blur-sm rounded-lg p-3 border border-white/20">
-        <div className="flex items-center gap-3">
-          {/* Toggle controles */}
-          <button
-            onClick={() => setShowControls(!showControls)}
-            className="flex items-center justify-center w-10 h-10 bg-white/10 hover:bg-white/20 text-white rounded-lg border border-white/20 transition-colors hover:scale-105"
-            title={showControls ? 'Ocultar controles' : 'Mostrar controles'}
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
-          
-          {/* Controles de efeito */}
-          {showControls && (
-            <div className="flex items-center gap-3">
-              {/* Amplitude */}
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                </svg>
-                <input
-                  type="range"
-                  min="50"
-                  max="500"
-                  step="10"
-                  value={amplitude}
-                  onChange={(e) => setAmplitude(Number(e.target.value))}
-                  className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                  title={`Amplitude: ${amplitude}`}
-                />
+      {/* Sistema de controles unificado */}
+      <div className="controls-container">
+        {/* Toggle button */}
+        <button
+          onClick={() => setShowControls(!showControls)}
+          className={`glass-toggle liquid-animate ${showControls ? 'active' : ''}`}
+          title={showControls ? 'Ocultar controles' : 'Mostrar controles'}
+        >
+          ⚙️
+        </button>
+        
+        {/* Painel de controles */}
+        {showControls && (
+          <div className="controls-panel glass-panel">
+            <div className="p-4">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-mono text-white/90 tracking-wide">AUDIO CONTROLS</h3>
+                <div className="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 glow-pulse"></div>
               </div>
               
-              {/* Velocidade da onda */}
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-                <input
-                  type="range"
-                  min="5"
-                  max="100"
-                  step="1"
-                  value={waveSpeed}
-                  onChange={(e) => setWaveSpeed(Number(e.target.value))}
-                  className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                  title={`Velocidade: ${waveSpeed}`}
-                />
-              </div>
-              
-              {/* Densidade de partículas */}
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-                <input
-                  type="range"
-                  min="10"
-                  max="200"
-                  step="10"
-                  value={particleDensity}
-                  onChange={(e) => setParticleDensity(Number(e.target.value))}
-                  className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                  title={`Partículas: ${particleDensity}`}
-                />
-              </div>
-              
-              {/* Largura da linha */}
-              <div className="flex items-center gap-2">
-                <svg className="w-4 h-4 text-white/80" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                </svg>
-                <input
-                  type="range"
-                  min="0.4"
-                  max="1.0"
-                  step="0.1"
-                  value={lineWidth}
-                  onChange={(e) => setLineWidth(Number(e.target.value))}
-                  className="w-16 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-                  title={`Largura: ${lineWidth * 100}%`}
-                />
+              {/* Controles de efeito */}
+              <div className="space-y-4">
+                {/* Amplitude */}
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between text-xs text-white/70 font-mono">
+                    <span>AMPLITUDE</span>
+                    <span>{amplitude}</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="50"
+                    max="500"
+                    step="10"
+                    value={amplitude}
+                    onChange={(e) => setAmplitude(Number(e.target.value))}
+                    className="glass-slider w-full"
+                  />
+                </div>
+                
+                {/* Velocidade */}
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between text-xs text-white/70 font-mono">
+                    <span>VELOCITY</span>
+                    <span>{waveSpeed}</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="5"
+                    max="100"
+                    step="1"
+                    value={waveSpeed}
+                    onChange={(e) => setWaveSpeed(Number(e.target.value))}
+                    className="glass-slider w-full"
+                  />
+                </div>
+                
+                {/* Densidade */}
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between text-xs text-white/70 font-mono">
+                    <span>DENSITY</span>
+                    <span>{particleDensity}</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="10"
+                    max="200"
+                    step="10"
+                    value={particleDensity}
+                    onChange={(e) => setParticleDensity(Number(e.target.value))}
+                    className="glass-slider w-full"
+                  />
+                </div>
+                
+                {/* Espessura */}
+                <div className="space-y-2">
+                  <label className="flex items-center justify-between text-xs text-white/70 font-mono">
+                    <span>THICKNESS</span>
+                    <span>{(lineWidth * 100).toFixed(0)}%</span>
+                  </label>
+                  <input
+                    type="range"
+                    min="0.4"
+                    max="1.0"
+                    step="0.1"
+                    value={lineWidth}
+                    onChange={(e) => setLineWidth(Number(e.target.value))}
+                    className="glass-slider w-full"
+                  />
+                </div>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
       
       {/* Áudio oculto */}
@@ -424,25 +430,6 @@ export default function AudioFrequencyWave() {
         onEnded={() => setIsPlaying(false)}
       />
       
-      {/* Estilos para o slider */}
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 12px;
-          width: 12px;
-          border-radius: 50%;
-          background: white;
-          cursor: pointer;
-        }
-        
-        .slider::-moz-range-thumb {
-          height: 12px;
-          width: 12px;
-          border-radius: 50%;
-          background: white;
-          border: none;
-        }
-      `}</style>
     </div>
   )
 }

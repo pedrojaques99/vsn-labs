@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { Settings } from 'lucide-react'
 
-const ASCII_CHARS = '!@#$%^&*()XO|ALWA'
+const DEFAULT_ASCII_CHARS = '!@#$%^&*()XO|ALWA'
 
 interface WavePoint {
   x: number
@@ -44,6 +44,7 @@ export function WaveAsciiVortex() {
   const [showControls, setShowControls] = useState(false)
   const [zoom, setZoom] = useState(1.0)
   const [cursorRadius, setCursorRadius] = useState(200) // Novo controle para raio do cursor
+  const [asciiChars, setAsciiChars] = useState(DEFAULT_ASCII_CHARS) // Caracteres ASCII personalizáveis
 
   // Função para processar imagem e criar máscara
   const processImage = useCallback((file: File) => {
@@ -135,8 +136,8 @@ export function WaveAsciiVortex() {
           const canvasX = offsetX + x * scale
           const canvasY = offsetY + y * scale
           
-          const charIndex = (x + y) % ASCII_CHARS.length
-          const char = ASCII_CHARS[charIndex]
+          const charIndex = (x + y) % asciiChars.length
+          const char = asciiChars[charIndex]
           
           points.push({
             x: canvasX,
@@ -153,7 +154,7 @@ export function WaveAsciiVortex() {
     
     setWavePoints(points)
     setIsInitialized(true)
-  }, [imageMask, shapeScale, charSpacing, zoom])
+  }, [imageMask, shapeScale, charSpacing, zoom, asciiChars])
 
   // Função para gerar pontos padrão (grade circular)
   const generateDefaultPoints = useCallback(() => {
@@ -179,8 +180,8 @@ export function WaveAsciiVortex() {
         )
         
         if (distanceFromCenter <= gridSize / 2) {
-          const charIndex = (row + col) % ASCII_CHARS.length
-          const char = ASCII_CHARS[charIndex]
+          const charIndex = (row + col) % asciiChars.length
+          const char = asciiChars[charIndex]
           
           points.push({
             x,
@@ -197,7 +198,7 @@ export function WaveAsciiVortex() {
     
     setWavePoints(points)
     setIsInitialized(true)
-  }, [])
+  }, [asciiChars])
 
   // Inicializar canvas e pontos
   useEffect(() => {
@@ -295,8 +296,8 @@ export function WaveAsciiVortex() {
       
       // Mudança de caractere baseada na rotação
       if (Math.random() > 0.98) {
-        const rotationIndex = Math.floor((Math.atan2(tangY, tangX) + Math.PI) / (2 * Math.PI) * ASCII_CHARS.length)
-        newChar = ASCII_CHARS[rotationIndex % ASCII_CHARS.length]
+        const rotationIndex = Math.floor((Math.atan2(tangY, tangX) + Math.PI) / (2 * Math.PI) * asciiChars.length)
+        newChar = asciiChars[rotationIndex % asciiChars.length]
       }
     }
     
@@ -312,7 +313,7 @@ export function WaveAsciiVortex() {
       opacity,
       scale
     }
-  }, [mousePos, vortexIntensity, showOpacity, charOpacity, cursorRadius])
+  }, [mousePos, vortexIntensity, showOpacity, charOpacity, cursorRadius, asciiChars])
 
   // Função de renderização
   const render = useCallback(() => {
@@ -401,8 +402,10 @@ export function WaveAsciiVortex() {
   useEffect(() => {
     if (hasImage && imageMask) {
       generatePointsFromMask()
+    } else if (!hasImage && isInitialized) {
+      generateDefaultPoints()
     }
-  }, [shapeScale, charSpacing, zoom, hasImage, imageMask, generatePointsFromMask])
+  }, [shapeScale, charSpacing, zoom, hasImage, imageMask, generatePointsFromMask, asciiChars, isInitialized, generateDefaultPoints])
 
   // Função para resetar para pontos padrão
   const resetToDefault = () => {
@@ -615,8 +618,77 @@ export function WaveAsciiVortex() {
               </div>
             </div>
             
-            {/* Botões de preset */}
+            {/* Controle de caracteres ASCII */}
+            <div>
+              <label className="block text-white/80 text-sm mb-2">
+                Caracteres ASCII Personalizados
+              </label>
+              <input
+                type="text"
+                value={asciiChars}
+                onChange={(e) => {
+                  const value = e.target.value
+                  // Permitir apenas caracteres únicos e limitar a 50 caracteres
+                  if (value.length <= 50) {
+                    const uniqueChars = Array.from(new Set(value)).join('')
+                    setAsciiChars(uniqueChars || DEFAULT_ASCII_CHARS)
+                  }
+                }}
+                placeholder="Digite seus caracteres..."
+                className="w-full px-3 py-2 bg-white/10 border border-white/30 rounded-md text-white text-sm font-mono focus:border-white/50 focus:outline-none transition-colors"
+              />
+              <div className="text-xs text-white/60 mt-1">
+                Total: {asciiChars.length} caracteres únicos
+              </div>
+            </div>
+            
+            {/* Presets de caracteres ASCII */}
             <div className="pt-2 border-t border-white/20">
+              <label className="block text-white/80 text-sm mb-2">
+                Presets de Caracteres
+              </label>
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <button
+                  onClick={() => setAsciiChars('!@#$%^&*()XO|ALWA')}
+                  className="px-3 py-1 bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 border border-blue-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Padrão
+                </button>
+                <button
+                  onClick={() => setAsciiChars('01')}
+                  className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Binário
+                </button>
+                <button
+                  onClick={() => setAsciiChars('.:-=+*#%@')}
+                  className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Densidade
+                </button>
+                <button
+                  onClick={() => setAsciiChars('MATRIX')}
+                  className="px-3 py-1 bg-red-500/20 hover:bg-red-500/30 text-red-300 border border-red-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Matrix
+                </button>
+                <button
+                  onClick={() => setAsciiChars('░▒▓█')}
+                  className="px-3 py-1 bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 border border-yellow-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Blocos
+                </button>
+                <button
+                  onClick={() => setAsciiChars('ABCDEFGHIJKLMNOPQRSTUVWXYZ')}
+                  className="px-3 py-1 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/30 rounded text-xs transition-all duration-200"
+                >
+                  Alfabeto
+                </button>
+              </div>
+              
+              <label className="block text-white/80 text-sm mb-2">
+                Presets Visuais
+              </label>
               <div className="grid grid-cols-2 gap-2">
                 <button
                   onClick={() => {
@@ -631,7 +703,7 @@ export function WaveAsciiVortex() {
                   }}
                   className="px-3 py-1 bg-green-500/20 hover:bg-green-500/30 text-green-300 border border-green-500/30 rounded text-xs transition-all duration-200"
                 >
-                  Preset Fino
+                  Fino
                 </button>
                 <button
                   onClick={() => {
@@ -646,7 +718,7 @@ export function WaveAsciiVortex() {
                   }}
                   className="px-3 py-1 bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/30 rounded text-xs transition-all duration-200"
                 >
-                  Preset Grosso
+                  Grosso
                 </button>
               </div>
             </div>

@@ -8,9 +8,11 @@ export function WaveDemo() {
       <WaveAscii />
       
       {/* Overlay com instruções */}
-      <div className="absolute top-16 left-4 z-20 text-white font-mono text-sm bg-black/50 p-4 rounded">
-        <h2 className="text-lg font-bold mb-2">Wave ASCII</h2>
-        <p>Mova o mouse pela tela para ver o efeito de onda</p>
+      <div className="controls-container">
+        <div className="glass-panel p-4 max-w-xs">
+          <h2 className="text-sm font-mono text-white/90 tracking-wide mb-2">WAVE ASCII</h2>
+          <p className="text-xs text-white/70">Mova o mouse pela tela para ver o efeito de onda</p>
+        </div>
       </div>
     </div>
   )

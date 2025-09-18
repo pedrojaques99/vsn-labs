@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
+import BackButton from "./components/BackButton";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,37 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wave Effects",
-  description: "Interactive wave effects with ASCII and elliptical lines",
+  title: "Visant Labs®",
+  description: "Experimental interactive design lab",
+  keywords: ["brazilian", "pedro jaques", "pedro xavier", "visant co. studio", "wave effects", "audio visualizer", "ASCII art", "interactive", "visual effects", "experimental", "design", "lab"],
+  authors: [{ name: "Visant Co. Studio" }],
+  creator: "Visant Studio",
+  publisher: "Visant Co. Studio",
+  robots: {
+    index: true,
+    follow: true,
+  },
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://vsn-labs.vercel.app",
+    siteName: "Visant Labs®",
+    title: "Visant Labs®",
+  },
+  twitter: {
+    card: "summary",
+    title: "Visant Labs®",
+    creator: "@visant.co",
+  },
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  manifest: "/manifest.json",
+  other: {
+    "theme-color": "#0a0a0a",
+  },
 };
 
 export default function RootLayout({
@@ -24,23 +54,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
+    <html>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {/* Navigation bar */}
-        <nav className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-sm border-b border-white/10 mb-50">
-          <div className="max-w-7xl mx-auto px-4 py-3">
-            <Link 
-              href="/"
-              className="text-white font-mono font-semibold hover:text-gray-300 transition-colors"
-            >
-              ← Back
-            </Link>
-          </div>
-        </nav>
-        
-        {children}
+        <ThemeProvider>
+          {/* Navigation back button - only show on non-home pages */}
+          <BackButton />
+          
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

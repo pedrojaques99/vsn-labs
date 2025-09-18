@@ -1,0 +1,19 @@
+{
+  "name": "Wave Effects - VSN Labs",
+  "short_name": "Wave Effects",
+  "description": "Interactive wave effects with ASCII and elliptical lines",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00ff88",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["entertainment", "music", "utilities"],
+  "lang": "pt-BR"
+}
