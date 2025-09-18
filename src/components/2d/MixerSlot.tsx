@@ -415,7 +415,7 @@ export default function MixerSlot({
               const nextRate = currentRate === 0.75 ? 1 : currentRate === 1 ? 1.25 : 0.75
               onSetPlaybackRate(player.id, nextRate)
             }}
-            icon={<span className={`${gridLayout === 4 ? 'text-[6px]' : 'text-xs'} font-mono`}>{(player.playbackRate || 1)}x</span>}
+            icon={<span className={`${gridLayout === 4 ? 'text-[8px]' : 'text-xs'} font-mono font-bold`}>{(player.playbackRate || 1)}x</span>}
             title={`Speed: ${player.playbackRate || 1}x - Click to cycle`}
             variant="default"
             size={buttonSize}

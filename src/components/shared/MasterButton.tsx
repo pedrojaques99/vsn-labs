@@ -42,21 +42,21 @@ export default function MasterButton({
     default: {
       base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)]',
       hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)]',
-      icon: 'text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)]'
+      icon: 'text-[var(--theme-text)] hover:text-[var(--theme-accent)]'
     },
     danger: {
-      base: 'bg-red-500/10 border-red-500/30',
-      hover: 'hover:bg-red-500/20 hover:border-red-500/50',
+      base: 'bg-red-500/20 border-red-500/40',
+      hover: 'hover:bg-red-500/30 hover:border-red-500/60',
       icon: 'text-red-400 hover:text-red-300'
     },
     success: {
-      base: 'bg-[var(--theme-accent)]/20 border-[var(--theme-accent)]/40',
-      hover: 'hover:bg-[var(--theme-accent)]/30 hover:border-[var(--theme-accent)]/60',
-      icon: 'text-[var(--theme-accent)]'
+      base: 'bg-[var(--theme-accent)]/30 border-[var(--theme-accent)]/50',
+      hover: 'hover:bg-[var(--theme-accent)]/40 hover:border-[var(--theme-accent)]/70',
+      icon: 'text-[var(--theme-accent)] hover:text-[var(--theme-accent)]'
     },
     warning: {
-      base: 'bg-yellow-500/10 border-yellow-500/30',
-      hover: 'hover:bg-yellow-500/20 hover:border-yellow-500/50',
+      base: 'bg-yellow-500/20 border-yellow-500/40',
+      hover: 'hover:bg-yellow-500/30 hover:border-yellow-500/60',
       icon: 'text-yellow-400 hover:text-yellow-300'
     }
   }

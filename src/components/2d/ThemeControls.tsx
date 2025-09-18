@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Palette, X } from 'lucide-react'
 import { useTheme } from '@/contexts/ThemeContext'
 
@@ -19,6 +19,24 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
   
   const [customBackground, setCustomBackground] = useState(currentTheme.colors.background)
   const [customAccent, setCustomAccent] = useState(currentTheme.colors.accent)
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  // Handle click outside to close
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose()
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen, onClose])
 
   // Apply custom colors immediately when changed
   const handleBackgroundChange = (color: string) => {
@@ -35,7 +53,7 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div className="relative w-full max-w-md glass-theme-static rounded-lg shadow-2xl p-6 theme-transition">
+      <div ref={modalRef} className="relative w-full max-w-md glass-theme-static rounded-lg shadow-2xl p-6 theme-transition">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">

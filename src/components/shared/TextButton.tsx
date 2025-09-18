@@ -43,14 +43,14 @@ export default function TextButton({
 
   const variantConfig = {
     default: {
-      base: 'bg-black/40 border-white/20 text-white/80',
-      hover: 'hover:bg-white/10 hover:border-white/30 hover:text-white',
-      icon: 'text-white/60'
+      base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)] text-[var(--theme-text)]',
+      hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]',
+      icon: 'text-[var(--theme-text-secondary)]'
     },
     primary: {
-      base: 'bg-cyan-500/20 border-cyan-400/40 text-cyan-400',
-      hover: 'hover:bg-cyan-500/30 hover:border-cyan-400/60 hover:text-cyan-300',
-      icon: 'text-cyan-400'
+      base: 'bg-[var(--theme-accent)]/20 border-[var(--theme-accent)]/40 text-[var(--theme-accent)]',
+      hover: 'hover:bg-[var(--theme-accent)]/30 hover:border-[var(--theme-accent)]/60 hover:text-[var(--theme-accent)]',
+      icon: 'text-[var(--theme-accent)]'
     },
     success: {
       base: 'bg-green-500/20 border-green-400/40 text-green-400',
@@ -68,9 +68,9 @@ export default function TextButton({
       icon: 'text-pink-400'
     },
     secondary: {
-      base: 'bg-white/10 border-white/20 text-white/80',
-      hover: 'hover:bg-white/20 hover:border-white/30 hover:text-white',
-      icon: 'text-white/60'
+      base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)] text-[var(--theme-text-secondary)]',
+      hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]',
+      icon: 'text-[var(--theme-text-secondary)]'
     }
   }
 

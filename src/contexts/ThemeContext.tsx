@@ -44,7 +44,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.8)',
+      glassBg: 'rgba(0, 0, 0, 0.65)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -59,7 +59,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.8)',
+      glassBg: 'rgba(0, 0, 0, 0.65)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -74,7 +74,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.8)',
+      glassBg: 'rgba(0, 0, 0, 0.65)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -89,7 +89,7 @@ const defaultThemes: Theme[] = [
       text: '#000000',
       textSecondary: '#525252',
       border: 'rgba(0, 0, 0, 0.1)',
-      glassBg: 'rgba(255, 255, 255, 0.8)',
+      glassBg: 'rgba(255, 255, 255, 0.65)',
       glassBorder: 'rgba(0, 0, 0, 0.1)',
       glassHover: 'rgba(0, 0, 0, 0.05)'
     }
@@ -104,7 +104,7 @@ const defaultThemes: Theme[] = [
       text: '#000000',
       textSecondary: '#525252',
       border: 'rgba(0, 0, 0, 0.1)',
-      glassBg: 'rgba(255, 255, 255, 0.8)',
+      glassBg: 'rgba(255, 255, 255, 0.65)',
       glassBorder: 'rgba(0, 0, 0, 0.1)',
       glassHover: 'rgba(0, 0, 0, 0.05)'
     }
@@ -244,7 +244,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         text: textColor,
         textSecondary: isDarkBackground ? '#a1a1aa' : '#525252',
         border: isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        glassBg: isDarkBackground ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+        glassBg: isDarkBackground ? 'rgba(0, 0, 0, 0.65)' : 'rgba(255, 255, 255, 0.65)',
         glassBorder: isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
         glassHover: isDarkBackground ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
       }
@@ -294,7 +294,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         text: getTextColor(currentTheme.colors.background),
         textSecondary: newLightMode ? '#525252' : '#a1a1aa',
         border: newLightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
-        glassBg: newLightMode ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)',
+        glassBg: newLightMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)',
         glassBorder: newLightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
         glassHover: newLightMode ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'
       }
