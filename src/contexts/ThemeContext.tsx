@@ -370,7 +370,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, [themes, isLightMode, setTheme, setCustomColors])
 
-
   const value: ThemeContextType = {
     currentTheme,
     themes,
