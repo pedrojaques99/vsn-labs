@@ -43,7 +43,7 @@ export default function TextButton({
 
   const variantConfig = {
     default: {
-      base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)] text-[var(--theme-text)]',
+      base: 'glass-theme text-[var(--theme-text)]',
       hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]',
       icon: 'text-[var(--theme-text-secondary)]'
     },
@@ -68,7 +68,7 @@ export default function TextButton({
       icon: 'text-pink-400'
     },
     secondary: {
-      base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)] text-[var(--theme-text-secondary)]',
+      base: 'glass-theme text-[var(--theme-text-secondary)]',
       hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)] hover:text-[var(--theme-accent)]',
       icon: 'text-[var(--theme-text-secondary)]'
     }

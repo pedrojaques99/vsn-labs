@@ -44,7 +44,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.65)',
+      glassBg: 'rgba(0, 0, 0, 0.3)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -59,7 +59,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.65)',
+      glassBg: 'rgba(0, 0, 0, 0.3)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -74,7 +74,7 @@ const defaultThemes: Theme[] = [
       text: '#ffffff',
       textSecondary: '#a1a1aa',
       border: 'rgba(255, 255, 255, 0.1)',
-      glassBg: 'rgba(0, 0, 0, 0.65)',
+      glassBg: 'rgba(0, 0, 0, 0.3)',
       glassBorder: 'rgba(255, 255, 255, 0.1)',
       glassHover: 'rgba(255, 255, 255, 0.05)'
     }
@@ -89,7 +89,7 @@ const defaultThemes: Theme[] = [
       text: '#000000',
       textSecondary: '#525252',
       border: 'rgba(0, 0, 0, 0.1)',
-      glassBg: 'rgba(255, 255, 255, 0.65)',
+      glassBg: 'rgba(255, 255, 255, 0.3)',
       glassBorder: 'rgba(0, 0, 0, 0.1)',
       glassHover: 'rgba(0, 0, 0, 0.05)'
     }
@@ -104,7 +104,7 @@ const defaultThemes: Theme[] = [
       text: '#000000',
       textSecondary: '#525252',
       border: 'rgba(0, 0, 0, 0.1)',
-      glassBg: 'rgba(255, 255, 255, 0.65)',
+      glassBg: 'rgba(255, 255, 255, 0.3)',
       glassBorder: 'rgba(0, 0, 0, 0.1)',
       glassHover: 'rgba(0, 0, 0, 0.05)'
     }
@@ -244,7 +244,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         text: textColor,
         textSecondary: isDarkBackground ? '#a1a1aa' : '#525252',
         border: isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-        glassBg: isDarkBackground ? 'rgba(0, 0, 0, 0.65)' : 'rgba(255, 255, 255, 0.65)',
+        glassBg: isDarkBackground ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)',
         glassBorder: isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
         glassHover: isDarkBackground ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'
       }
@@ -260,7 +260,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     root.style.setProperty('--theme-text', textColor)
     root.style.setProperty('--theme-text-secondary', isDarkBackground ? '#a1a1aa' : '#525252')
     root.style.setProperty('--theme-border', isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)')
-    root.style.setProperty('--theme-glass-bg', isDarkBackground ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)')
+    root.style.setProperty('--theme-glass-bg', isDarkBackground ? 'rgba(0, 0, 0, 0.3)' : 'rgba(255, 255, 255, 0.3)')
     root.style.setProperty('--theme-glass-border', isDarkBackground ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)')
     root.style.setProperty('--theme-glass-hover', isDarkBackground ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)')
     
@@ -294,7 +294,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         text: getTextColor(currentTheme.colors.background),
         textSecondary: newLightMode ? '#525252' : '#a1a1aa',
         border: newLightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
-        glassBg: newLightMode ? 'rgba(255, 255, 255, 0.65)' : 'rgba(0, 0, 0, 0.65)',
+        glassBg: newLightMode ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.3)',
         glassBorder: newLightMode ? 'rgba(0, 0, 0, 0.1)' : 'rgba(255, 255, 255, 0.1)',
         glassHover: newLightMode ? 'rgba(0, 0, 0, 0.05)' : 'rgba(255, 255, 255, 0.05)'
       }
@@ -336,34 +336,55 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Carregar tema do Supabase
   const loadThemeFromSupabase = useCallback(async () => {
-    if (!supabase) return
+    if (!supabase) {
+      console.log('Supabase client not available')
+      return
+    }
     
     try {
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
-
-      const { data, error } = await supabase.rpc('get_user_theme')
-      if (error) {
-        console.error('Error loading theme from Supabase:', error)
+      if (!user) {
+        console.log('No user authenticated, skipping theme load')
         return
       }
 
+      console.log('Loading theme for user:', user.id)
+      const { data, error } = await supabase.rpc('get_user_theme')
+      if (error) {
+        console.error('Error loading theme from Supabase:', {
+          error,
+          message: error.message,
+          details: error.details,
+          hint: error.hint,
+          code: error.code
+        })
+        return
+      }
+
+      console.log('Theme data loaded:', data)
+
       if (data && data.length > 0) {
         const themeData = data[0]
+        console.log('Applying theme data:', themeData)
         
         if (themeData.theme_id === 'custom' && themeData.custom_background_color && themeData.custom_accent_color) {
           // Carregar tema customizado
+          console.log('Loading custom theme')
           setCustomColors(themeData.custom_background_color, themeData.custom_accent_color)
         } else {
           // Carregar tema padrão
           const theme = themes.find(t => t.id === themeData.theme_id) || defaultThemes[0]
+          console.log('Loading preset theme:', theme.id)
           setTheme(theme.id)
         }
         
         // Aplicar modo light/dark
         if (themeData.is_light_mode !== isLightMode) {
+          console.log('Setting light mode:', themeData.is_light_mode)
           setIsLightMode(themeData.is_light_mode)
         }
+      } else {
+        console.log('No theme data found, using default theme')
       }
     } catch (error) {
       console.error('Error loading theme from Supabase:', error)

@@ -1911,6 +1911,7 @@ export default function YouTubeMixer() {
                   icon={<Eye size={16} />}
                   variant="secondary"
                   size="medium"
+                  className="text-theme-secondary hover:text-theme"
                 >
                   EXPLORE
                 </TextButton>

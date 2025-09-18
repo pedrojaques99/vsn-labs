@@ -40,7 +40,7 @@ export default function MasterButton({
 
   const variantConfig = {
     default: {
-      base: 'bg-[var(--theme-glass-bg)] border-[var(--theme-glass-border)]',
+      base: 'glass-theme',
       hover: 'hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)]',
       icon: 'text-[var(--theme-text)] hover:text-[var(--theme-accent)]'
     },

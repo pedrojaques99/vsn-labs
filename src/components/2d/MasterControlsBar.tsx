@@ -37,7 +37,7 @@ export default function MasterControlsBar({
   isMixLiked
 }: MasterControlsBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[var(--theme-glass-bg)] backdrop-blur-md border-t border-[var(--theme-glass-border)] master-controls-bar">
+    <div className="fixed bottom-0 left-0 right-0 z-50 glass-theme-static border-t border-[var(--theme-glass-border)] master-controls-bar">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 pb-4">
         <div className="flex items-center w-full">
           {/* Left Section - Play Button + Mix Info */}

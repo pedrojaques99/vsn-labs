@@ -69,7 +69,7 @@ export default function PresetButton({
       className={`
         flex flex-col items-center justify-center
         ${config.container}
-        bg-[var(--theme-glass-bg)] border border-[var(--theme-glass-border)] rounded-sm
+        glass-theme rounded-sm
         hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)]/40
         transition-all duration-200
         disabled:opacity-50 disabled:cursor-not-allowed

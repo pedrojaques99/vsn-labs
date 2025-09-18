@@ -125,7 +125,7 @@ export default function MixerSlot({
             ? 'border-[var(--theme-accent)] bg-[var(--theme-accent)]/5 scale-105 shadow-lg shadow-[var(--theme-accent)]/20' 
             : player.isPlaying
             ? 'border-[var(--theme-accent)]/60 bg-[var(--theme-accent)]/10 shadow-lg shadow-[var(--theme-accent)]/20'
-            : 'border-[var(--theme-glass-border)] bg-[var(--theme-glass-bg)] hover:border-[var(--theme-accent)]/40'
+            : 'glass-theme hover:border-[var(--theme-accent)]/40'
           }
           hover:border-[var(--theme-accent)]/40 hover:bg-[var(--theme-accent)]/5
         `}

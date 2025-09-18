@@ -16,7 +16,7 @@ export default function BackButton() {
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="back-button px-3 py-2 text-sm font-mono flex items-center gap-2"
+          className="glass-theme px-3 py-2 text-sm font-mono flex items-center gap-2 text-theme-secondary hover:text-theme hover:bg-theme-glass-hover hover:border-accent transition-all duration-200"
           title="Visant Labs Home"
         >
           🧪
@@ -29,7 +29,7 @@ export default function BackButton() {
           href="/donate"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1 px-2 py-1 text-xs font-mono bg-black/20 border border-white/10 rounded text-white/40 hover:text-white/70 hover:bg-black/40 hover:border-white/20 transition-all duration-200"
+          className="flex items-center gap-1 px-2 py-1 text-xs font-mono glass-theme text-theme-secondary hover:text-theme hover:bg-theme-glass-hover hover:border-accent transition-all duration-200"
           title="Support Visant Labs"
         >
           ☕ <span>donate</span>

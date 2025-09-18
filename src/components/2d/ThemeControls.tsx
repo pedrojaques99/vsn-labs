@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
-import { Palette, X } from 'lucide-react'
-import { useTheme } from '@/contexts/ThemeContext'
+import { X } from 'lucide-react'
+import { useTheme, Theme } from '../../contexts/ThemeContext'
 
 interface ThemeControlsProps {
   isOpen: boolean
@@ -10,13 +10,7 @@ interface ThemeControlsProps {
 }
 
 export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
-  const { 
-    currentTheme, 
-    themes, 
-    setTheme, 
-    setCustomColors
-  } = useTheme()
-  
+  const { currentTheme, themes, setTheme, setCustomColors } = useTheme()
   const [customBackground, setCustomBackground] = useState(currentTheme.colors.background)
   const [customAccent, setCustomAccent] = useState(currentTheme.colors.accent)
   const modalRef = useRef<HTMLDivElement>(null)
@@ -52,55 +46,55 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
-      <div ref={modalRef} className="relative w-full max-w-md glass-theme-static rounded-lg shadow-2xl p-6 theme-transition">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg">
+      <div 
+        ref={modalRef} 
+        className="relative w-full max-w-2xl glass-theme-static rounded-xl shadow-2xl p-4 sm:p-6"
+      >
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-3">
-            <Palette size={20} className="text-accent" />
-            <h2 className="text-lg font-mono font-bold text-theme">Theme</h2>
-          </div>
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <h2 className="text-lg sm:text-xl font-mono font-bold text-theme">Theme</h2>
           <button
             onClick={onClose}
-            className="text-theme-secondary hover:text-theme transition-colors p-1"
+            className="text-theme-secondary hover:text-theme transition-colors p-1 cursor-pointer"
           >
-            <X size={20} />
+            <X size={18} />
           </button>
         </div>
 
-        {/* Preset Themes */}
-        <div className="mb-6">
-          <h3 className="text-theme font-medium mb-3">Presets</h3>
-          <div className="grid grid-cols-2 gap-2">
-            {themes.map((theme) => (
+        {/* Theme Presets */}
+        <div className="mb-4 sm:mb-6">
+          <h3 className="text-theme font-medium mb-3 text-sm">Presets</h3>
+          <div className="grid grid-cols-5 gap-2">
+            {themes.map((theme: Theme) => (
               <button
                 key={theme.id}
                 onClick={() => setTheme(theme.id)}
-                className={`p-3 rounded-lg border-2 transition-all duration-200 ${
+                className={`p-2 rounded-lg border-2 transition-all duration-200 cursor-pointer ${
                   currentTheme.id === theme.id
                     ? 'border-accent bg-accent/10'
                     : 'border-theme hover:border-accent/50'
                 }`}
               >
-                <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-center justify-center gap-1 mb-1">
                   <div
-                    className="w-3 h-3 rounded-full border border-theme"
+                    className="w-2 h-2 rounded-full border border-theme"
                     style={{ backgroundColor: theme.colors.background }}
                   />
                   <div
-                    className="w-3 h-3 rounded-full border border-theme"
+                    className="w-2 h-2 rounded-full border border-theme"
                     style={{ backgroundColor: theme.colors.accent }}
                   />
                 </div>
-                <div className="text-xs text-theme font-medium">{theme.name}</div>
+                <div className="text-xs text-theme font-medium truncate text-center">{theme.name}</div>
               </button>
             ))}
           </div>
         </div>
 
         {/* Custom Colors */}
-        <div className="mb-6">
-          <h3 className="text-theme font-medium mb-3">Custom Colors</h3>
+        <div className="mb-4 sm:mb-6">
+          <h3 className="text-theme font-medium mb-3 text-sm">Custom Colors</h3>
           <div className="space-y-3">
             <div>
               <label className="block text-xs text-theme-secondary mb-2">
@@ -111,13 +105,13 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
                   type="color"
                   value={customBackground}
                   onChange={(e) => handleBackgroundChange(e.target.value)}
-                  className="color-picker"
+                  className="w-8 h-8 rounded border border-theme cursor-pointer"
                 />
                 <input
                   type="text"
                   value={customBackground}
                   onChange={(e) => handleBackgroundChange(e.target.value)}
-                  className="flex-1 glass-input text-xs"
+                  className="flex-1 px-2 py-1 text-xs bg-transparent border border-theme rounded text-theme placeholder-theme-secondary"
                   placeholder="#000000"
                 />
               </div>
@@ -132,13 +126,13 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
                   type="color"
                   value={customAccent}
                   onChange={(e) => handleAccentChange(e.target.value)}
-                  className="color-picker"
+                  className="w-8 h-8 rounded border border-theme cursor-pointer"
                 />
                 <input
                   type="text"
                   value={customAccent}
                   onChange={(e) => handleAccentChange(e.target.value)}
-                  className="flex-1 glass-input text-xs"
+                  className="flex-1 px-2 py-1 text-xs bg-transparent border border-theme rounded text-theme placeholder-theme-secondary"
                   placeholder="#06b6d4"
                 />
               </div>
@@ -146,16 +140,15 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
           </div>
         </div>
 
-        {/* Current Preview */}
-        <div className="p-3 glass-theme-static rounded-lg">
-          <div className="text-xs text-theme-secondary mb-2">Current Theme</div>
+        {/* Current Theme Display */}
+        <div className="mt-4 sm:mt-6 p-3 glass-theme-static rounded-lg">
           <div className="flex items-center gap-2">
             <div
-              className="w-4 h-4 rounded border border-theme"
+              className="w-3 h-3 sm:w-4 sm:h-4 rounded border border-theme"
               style={{ backgroundColor: currentTheme.colors.background }}
             />
             <div
-              className="w-4 h-4 rounded border border-theme"
+              className="w-3 h-3 sm:w-4 sm:h-4 rounded border border-theme"
               style={{ backgroundColor: currentTheme.colors.accent }}
             />
             <span className="text-theme text-sm font-medium">{currentTheme.name}</span>

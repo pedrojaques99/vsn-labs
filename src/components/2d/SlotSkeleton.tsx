@@ -32,7 +32,7 @@ export default function SlotSkeleton({ gridLayout }: SlotSkeletonProps) {
   }
 
   return (
-    <div className="bg-[var(--theme-glass-bg)] border border-[var(--theme-glass-border)] rounded-lg p-4 animate-pulse h-full flex flex-col">
+    <div className="glass-theme rounded-lg p-4 animate-pulse h-full flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="h-4 bg-[var(--theme-glass-hover)] rounded w-16"></div>

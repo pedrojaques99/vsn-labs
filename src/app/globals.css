@@ -19,9 +19,9 @@
   --theme-text: #ffffff;
   --theme-text-secondary: #a1a1aa;
   --theme-border: rgba(255, 255, 255, 0.1);
-  --theme-glass-bg: rgba(0, 0, 0, 0.65);
+  --theme-glass-bg: rgba(0, 0, 0, 0.3);
   --theme-glass-border: rgba(255, 255, 255, 0.1);
-  --theme-glass-hover: rgba(255, 255, 255, 0.05);
+  --theme-glass-hover: rgba(255, 255, 255, 0.733);
   
   /* Legacy variables for backward compatibility */
   --background: var(--theme-background);
@@ -34,7 +34,7 @@
   --accent-purple: var(--theme-accent);
   --glow-blue: 0 0 5px rgba(255, 255, 255, 0.1);
   --glow-cyan: 0 0 5px var(--theme-accent);
-  --blur-bg: 16px;
+  --blur-bg: 8px;
 }
 
 @theme inline {
@@ -474,11 +474,13 @@ body.light * {
   background: var(--theme-glass-bg);
   backdrop-filter: blur(var(--blur-bg));
   border: 1px solid var(--theme-glass-border);
+  transition: all 0.3s ease;
 }
 
 .glass-theme:hover {
   background: var(--theme-glass-hover);
   border-color: var(--theme-accent);
+  transition: all 0.3s ease;
 }
 
 /* Glass theme without hover effect - for modals */
