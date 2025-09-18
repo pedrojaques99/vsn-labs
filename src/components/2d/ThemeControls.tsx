@@ -25,6 +25,37 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
     timeout?: NodeJS.Timeout
   }>>([])
 
+  // Toast functions
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' = 'info') => {
+    const id = Math.random().toString(36).substr(2, 9)
+    const timeout = setTimeout(() => {
+      setToasts(prev => prev.filter(toast => toast.id !== id))
+    }, 4000)
+    
+    setToasts(prev => [...prev, { id, message, type, timeout }])
+  }, [])
+
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => {
+      const toast = prev.find(t => t.id === id)
+      if (toast?.timeout) {
+        clearTimeout(toast.timeout)
+      }
+      return prev.filter(t => t.id !== id)
+    })
+  }, [])
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      toasts.forEach(toast => {
+        if (toast.timeout) {
+          clearTimeout(toast.timeout)
+        }
+      })
+    }
+  }, [toasts])
+
   // Handle click outside to close
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -57,9 +88,10 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
     setIsSaving(true)
     try {
       await saveThemeToSupabase()
-      // Show success feedback (you could add a toast here)
+      showToast('Theme saved successfully! 🎨', 'success')
     } catch (error) {
       console.error('Error saving theme:', error)
+      showToast('Error saving theme. Please try again.', 'error')
     } finally {
       setIsSaving(false)
     }
@@ -188,6 +220,12 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
           </div>
         </div>
       </div>
+      
+      {/* Toast Notifications */}
+      <ToastNotification
+        toasts={toasts}
+        onRemoveToast={removeToast}
+      />
     </div>
   )
 }
