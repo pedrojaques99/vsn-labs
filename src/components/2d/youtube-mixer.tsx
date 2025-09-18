@@ -382,7 +382,13 @@ export default function YouTubeMixer() {
         isLooping: p.isLooping,
         type: p.type,
         fileName: p.fileName,
-        videoId: p.videoId
+        videoId: p.videoId,
+        // Playlist properties
+        isPlaylist: p.isPlaylist,
+        playlistId: p.playlistId,
+        playlistTitle: p.playlistTitle,
+        playlistVideos: p.playlistVideos,
+        currentPlaylistIndex: p.currentPlaylistIndex
       })),
       globalVolume
     }
@@ -712,7 +718,13 @@ export default function YouTubeMixer() {
           isLooping: savedPlayer.isLooping,
           type: savedPlayer.type,
           fileName: savedPlayer.fileName,
-          videoId: savedPlayer.videoId || (savedPlayer.type === 'youtube' ? getYouTubeVideoId(savedPlayer.url) || '' : '')
+          videoId: savedPlayer.videoId || (savedPlayer.type === 'youtube' ? getYouTubeVideoId(savedPlayer.url) || '' : ''),
+          // Restore playlist properties
+          isPlaylist: savedPlayer.isPlaylist || false,
+          playlistId: savedPlayer.playlistId,
+          playlistTitle: savedPlayer.playlistTitle,
+          playlistVideos: savedPlayer.playlistVideos || [],
+          currentPlaylistIndex: savedPlayer.currentPlaylistIndex || 0
         }
       } else {
         mix.config.players.forEach((savedPlayer, index) => {
@@ -724,7 +736,13 @@ export default function YouTubeMixer() {
               isLooping: savedPlayer.isLooping,
               type: savedPlayer.type,
               fileName: savedPlayer.fileName,
-              videoId: savedPlayer.videoId || (savedPlayer.type === 'youtube' ? getYouTubeVideoId(savedPlayer.url) || '' : '')
+              videoId: savedPlayer.videoId || (savedPlayer.type === 'youtube' ? getYouTubeVideoId(savedPlayer.url) || '' : ''),
+              // Restore playlist properties
+              isPlaylist: savedPlayer.isPlaylist || false,
+              playlistId: savedPlayer.playlistId,
+              playlistTitle: savedPlayer.playlistTitle,
+              playlistVideos: savedPlayer.playlistVideos || [],
+              currentPlaylistIndex: savedPlayer.currentPlaylistIndex || 0
             }
           }
         })
@@ -739,7 +757,11 @@ export default function YouTubeMixer() {
           if (player.url && player.type === 'youtube') {
             // Stagger player creation to avoid conflicts
             setTimeout(() => {
-              createYouTubePlayer(player)
+              if (player.isPlaylist) {
+                createPlaylistPlayer(player)
+              } else {
+                createYouTubePlayer(player)
+              }
             }, index * 150)
           }
         })

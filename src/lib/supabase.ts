@@ -51,6 +51,12 @@ export interface Mix {
       type: 'youtube' | 'audio'
       fileName?: string
       videoId?: string
+      // Playlist properties
+      isPlaylist?: boolean
+      playlistId?: string
+      playlistTitle?: string
+      playlistVideos?: Array<{id: string, title: string}>
+      currentPlaylistIndex?: number
     }>
     globalVolume: number
     isSlotPreset?: boolean
