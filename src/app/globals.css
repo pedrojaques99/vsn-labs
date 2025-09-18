@@ -34,7 +34,7 @@
   --accent-purple: var(--theme-accent);
   --glow-blue: 0 0 5px rgba(255, 255, 255, 0.1);
   --glow-cyan: 0 0 5px var(--theme-accent);
-  --blur-bg: 8px;
+  --blur-bg: 12px;
 }
 
 @theme inline {

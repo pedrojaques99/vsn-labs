@@ -53,9 +53,9 @@ export default function TextButton({
       icon: 'text-[var(--theme-accent)]'
     },
     success: {
-      base: 'bg-green-500/20 border-green-400/40 text-green-400',
-      hover: 'hover:bg-green-500/30 hover:border-green-400/60 hover:text-green-300',
-      icon: 'text-green-400'
+      base: 'bg-[var(--theme-accent)]/20 border-[var(--theme-accent)]/40 text-[var(--theme-accent)]',
+      hover: 'hover:bg-[var(--theme-accent)]/30 hover:border-[var(--theme-accent)]/60 hover:text-[var(--theme-accent)]',
+      icon: 'text-[var(--theme-accent)]'
     },
     danger: {
       base: 'bg-red-500/20 border-red-400/40 text-red-400',
@@ -63,9 +63,9 @@ export default function TextButton({
       icon: 'text-red-400'
     },
     warning: {
-      base: 'bg-pink-500/20 border-pink-400/40 text-pink-400',
-      hover: 'hover:bg-pink-500/30 hover:border-pink-400/60 hover:text-pink-300',
-      icon: 'text-pink-400'
+      base: 'bg-yellow-500/20 border-yellow-400/40 text-yellow-400',
+      hover: 'hover:bg-yellow-500/30 hover:border-yellow-400/60 hover:text-yellow-300',
+      icon: 'text-yellow-400'
     },
     secondary: {
       base: 'glass-theme text-[var(--theme-text-secondary)]',

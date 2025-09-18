@@ -37,7 +37,7 @@ export default function MasterControlsBar({
   isMixLiked
 }: MasterControlsBarProps) {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 glass-theme-static border-t border-[var(--theme-glass-border)] master-controls-bar">
+    <div className="fixed bottom-0 left-0 right-0 z-50 glass-theme border-t border-[var(--theme-glass-border)] master-controls-bar">
       <div className="max-w-6xl mx-auto px-2 sm:px-4 py-3 pb-4">
         <div className="flex items-center w-full">
           {/* Left Section - Play Button + Mix Info */}
@@ -101,7 +101,7 @@ export default function MasterControlsBar({
               onClick={onClearAllSlots}
               icon={<ListX size={16} className="sm:w-5 sm:h-5" />}
               title="Clear all slots"
-              variant="danger"
+              variant="default"
               size="medium"
             />
 
@@ -111,13 +111,13 @@ export default function MasterControlsBar({
                 onClick={() => onToggleAutoPlay(!autoPlay)}
                 icon={
                   <div className={`w-1 h-1 sm:w-2 sm:h-2 rounded-sm transition-colors ${
-                    autoPlay ? 'bg-green-400' : 'bg-white/60'
+                    autoPlay ? 'bg-[var(--theme-accent)]' : 'bg-[var(--theme-text-secondary)]'
                   }`} />
                 }
                 title={autoPlay ? 'AutoPlay ON - Click to disable' : 'AutoPlay OFF - Click to enable'}
-                variant={autoPlay ? "success" : "default"}
+                variant="default"
                 size="medium"
-                className={autoPlay ? 'ring-2 ring-green-400/50 shadow-lg shadow-green-400/20' : ''}
+                className={autoPlay ? 'ring-2 ring-[var(--theme-accent)]/50 shadow-lg shadow-[var(--theme-accent)]/20' : ''}
               />
               <span className="text-[10px] sm:text-xs text-[var(--theme-text-secondary)] font-mono">AUTO-PLAY</span>
             </div>

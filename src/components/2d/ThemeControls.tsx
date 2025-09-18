@@ -1,8 +1,9 @@
 'use client'
 
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useCallback } from 'react'
 import { X } from 'lucide-react'
 import { useTheme, Theme } from '../../contexts/ThemeContext'
+import ToastNotification from './ToastNotification'
 
 interface ThemeControlsProps {
   isOpen: boolean
@@ -10,10 +11,19 @@ interface ThemeControlsProps {
 }
 
 export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
-  const { currentTheme, themes, setTheme, setCustomColors } = useTheme()
+  const { currentTheme, themes, setTheme, setCustomColors, saveThemeToSupabase } = useTheme()
   const [customBackground, setCustomBackground] = useState(currentTheme.colors.background)
   const [customAccent, setCustomAccent] = useState(currentTheme.colors.accent)
+  const [isSaving, setIsSaving] = useState(false)
   const modalRef = useRef<HTMLDivElement>(null)
+  
+  // Toast states
+  const [toasts, setToasts] = useState<Array<{
+    id: string
+    message: string
+    type: 'success' | 'error' | 'info'
+    timeout?: NodeJS.Timeout
+  }>>([])
 
   // Handle click outside to close
   useEffect(() => {
@@ -43,13 +53,25 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
     setCustomColors(customBackground, color)
   }
 
+  const handleSaveTheme = async () => {
+    setIsSaving(true)
+    try {
+      await saveThemeToSupabase()
+      // Show success feedback (you could add a toast here)
+    } catch (error) {
+      console.error('Error saving theme:', error)
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
   if (!isOpen) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-lg">
       <div 
         ref={modalRef} 
-        className="relative w-full max-w-2xl glass-theme-static rounded-xl shadow-2xl p-4 sm:p-6"
+        className="relative w-full max-w-2xl glass-theme rounded-xl shadow-2xl p-4 sm:p-6"
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-4 sm:mb-6">
@@ -140,8 +162,19 @@ export default function ThemeControls({ isOpen, onClose }: ThemeControlsProps) {
           </div>
         </div>
 
+        {/* Save Theme Button */}
+        <div className="mb-4 sm:mb-6">
+          <button
+            onClick={handleSaveTheme}
+            disabled={isSaving}
+            className="w-full px-4 py-2 glass-theme border border-[var(--theme-glass-border)] rounded-lg text-[var(--theme-text)] hover:bg-[var(--theme-glass-hover)] hover:border-[var(--theme-accent)] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {isSaving ? 'Saving...' : 'Save Theme to Cloud'}
+          </button>
+        </div>
+
         {/* Current Theme Display */}
-        <div className="mt-4 sm:mt-6 p-3 glass-theme-static rounded-lg">
+        <div className="mt-4 sm:mt-6 p-3 glass-theme rounded-lg">
           <div className="flex items-center gap-2">
             <div
               className="w-3 h-3 sm:w-4 sm:h-4 rounded border border-theme"
